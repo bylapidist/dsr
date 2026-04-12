@@ -19,8 +19,8 @@ importers:
         specifier: ^2.30.0
         version: 2.30.0(@types/node@22.19.17)
       '@lapidist/eslint-config':
-        specifier: file:../eslint-config
-        version: file:../eslint-config(@typescript-eslint/eslint-plugin@8.58.1(@typescript-eslint/parser@8.58.1(eslint@9.39.4)(typescript@5.9.3))(eslint@9.39.4)(typescript@5.9.3))(@typescript-eslint/parser@8.58.1(eslint@9.39.4)(typescript@5.9.3))(eslint@9.39.4)
+        specifier: ^1.0.0
+        version: 1.0.0(@typescript-eslint/eslint-plugin@8.58.1(@typescript-eslint/parser@8.58.1(eslint@9.39.4)(typescript@5.9.3))(eslint@9.39.4)(typescript@5.9.3))(@typescript-eslint/parser@8.58.1(eslint@9.39.4)(typescript@5.9.3))(eslint@9.39.4)
       '@types/node':
         specifier: ^22.0.0
         version: 22.19.17
@@ -623,8 +623,8 @@ packages:
     resolution: {integrity: sha512-x0C6xEyaaF17MOBhJXdPRRx3lsO3Q9JgLJfxhQ8Ept6wPt0+tmLgD7K8CbMWmC00gnf66v3h4iA3gIAMk6hBgw==}
     engines: {node: '>=22', pnpm: '>=10'}
 
-  '@lapidist/eslint-config@file:../eslint-config':
-    resolution: {directory: ../eslint-config, type: directory}
+  '@lapidist/eslint-config@1.0.0':
+    resolution: {integrity: sha512-WIBO41HOsWEeL443gCoTbp2bCkP7XXhlvR/4vzmMJ+Hw2Dh+qrMiSVS9FA5I1XIOjCvM4vrg+fMfK14Yq2fkfg==}
     engines: {node: '>=22'}
     peerDependencies:
       '@typescript-eslint/eslint-plugin': '>=8'
@@ -2723,7 +2723,7 @@ snapshots:
       ajv: 8.18.0
       ajv-formats: 3.0.1(ajv@8.18.0)
 
-  '@lapidist/eslint-config@file:../eslint-config(@typescript-eslint/eslint-plugin@8.58.1(@typescript-eslint/parser@8.58.1(eslint@9.39.4)(typescript@5.9.3))(eslint@9.39.4)(typescript@5.9.3))(@typescript-eslint/parser@8.58.1(eslint@9.39.4)(typescript@5.9.3))(eslint@9.39.4)':
+  '@lapidist/eslint-config@1.0.0(@typescript-eslint/eslint-plugin@8.58.1(@typescript-eslint/parser@8.58.1(eslint@9.39.4)(typescript@5.9.3))(eslint@9.39.4)(typescript@5.9.3))(@typescript-eslint/parser@8.58.1(eslint@9.39.4)(typescript@5.9.3))(eslint@9.39.4)':
     dependencies:
       '@typescript-eslint/eslint-plugin': 8.58.1(@typescript-eslint/parser@8.58.1(eslint@9.39.4)(typescript@5.9.3))(eslint@9.39.4)(typescript@5.9.3)
       '@typescript-eslint/parser': 8.58.1(eslint@9.39.4)(typescript@5.9.3)
