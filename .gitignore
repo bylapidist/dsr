@@ -7,3 +7,5 @@ coverage/
 *.sock
 *.pid
 .designlint/
+docs/.vitepress/cache
+docs/.vitepress/dist
