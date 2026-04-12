@@ -12,7 +12,6 @@ concurrency:
 
 jobs:
   build:
-    name: Quality checks
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
@@ -24,25 +23,31 @@ jobs:
         with:
           filters: |
             docs:
+              - 'docs/**'
               - '**/*.md'
             non-docs:
               - '**'
+              - '!docs/**'
               - '!**/*.md'
-      - uses: pnpm/action-setup@v5
+              - '!*.md'
+      - uses: pnpm/action-setup@v6
+        with:
+          version: 10.33.0
       - uses: actions/setup-node@v6
         with:
           node-version: 24.14.1
           cache: pnpm
+          cache-dependency-path: pnpm-lock.yaml
       - run: pnpm install --frozen-lockfile --prefer-offline
       - name: Audit dependencies
         run: pnpm audit --prod --audit-level high
       - run: pnpm run build
         if: steps.changes.outputs['non-docs'] == 'true'
       - run: pnpm run lint
-        if: steps.changes.outputs['non-docs'] == 'true'
       - run: pnpm run format:check
-        if: steps.changes.outputs['non-docs'] == 'true'
       - run: pnpm run lint:md
         if: steps.changes.outputs['docs'] == 'true'
       - run: pnpm run test:coverage
         if: steps.changes.outputs['non-docs'] == 'true'
+      - run: pnpm run docs:build
+        if: steps.changes.outputs['docs'] == 'true'
