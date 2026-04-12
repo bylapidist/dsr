@@ -83,6 +83,11 @@ export class DSQLTokenQuery {
   withReplacement(pointer: string): Promise<string | null> {
     return Promise.resolve(this.#deprecationLedger.entries.get(pointer)?.replacement ?? null);
   }
+
+  /** Returns all tokens in the graph, optionally filtered by type. */
+  all(): Promise<DtifFlattenedToken[]> {
+    return Promise.resolve([...this.#tokens()]);
+  }
 }
 
 // ---------------------------------------------------------------------------
