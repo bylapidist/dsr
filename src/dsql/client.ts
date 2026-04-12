@@ -119,6 +119,15 @@ class RemoteDSQLTokenQuery {
       isStringOrNull,
     );
   }
+
+  all(): Promise<DtifFlattenedToken[]> {
+    return typedRequest(
+      this.#transport,
+      'dsql.tokens.all',
+      { type: this.#type },
+      isDtifFlattenedTokenArray,
+    );
+  }
 }
 
 class RemoteDSQLRuleQuery {
