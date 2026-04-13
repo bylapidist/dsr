@@ -419,9 +419,14 @@ describe('KernelProcess event emission', () => {
       });
 
       kernel.addToken('#/color/brand', makeToken('#/color/brand'));
-      await new Promise<void>((resolve) => {
-        setImmediate(resolve);
-      });
+
+      // Poll until the event arrives (up to 500 ms) to avoid CI flakiness.
+      const deadline = Date.now() + 500;
+      while (events.length === 0 && Date.now() < deadline) {
+        await new Promise<void>((resolve) => {
+          setImmediate(resolve);
+        });
+      }
 
       const added = events.find((e) => e.type === 'token.added');
       assert.ok(added !== undefined);
