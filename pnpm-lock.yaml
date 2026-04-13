@@ -9,47 +9,47 @@ importers:
   .:
     dependencies:
       '@lapidist/dtif-parser':
-        specifier: ^2.0.0
+        specifier: 2.0.0
         version: 2.0.0
       msgpackr:
-        specifier: ^1.11.2
+        specifier: 1.11.9
         version: 1.11.9
     devDependencies:
       '@changesets/cli':
-        specifier: ^2.30.0
+        specifier: 2.30.0
         version: 2.30.0(@types/node@22.19.17)
       '@lapidist/eslint-config':
-        specifier: ^1.0.0
+        specifier: 1.0.0
         version: 1.0.0(@typescript-eslint/eslint-plugin@8.58.1(@typescript-eslint/parser@8.58.1(eslint@9.39.4)(typescript@5.9.3))(eslint@9.39.4)(typescript@5.9.3))(@typescript-eslint/parser@8.58.1(eslint@9.39.4)(typescript@5.9.3))(eslint@9.39.4)
       '@types/node':
-        specifier: ^22.0.0
+        specifier: 22.19.17
         version: 22.19.17
       '@typescript-eslint/eslint-plugin':
-        specifier: ^8.58.1
+        specifier: 8.58.1
         version: 8.58.1(@typescript-eslint/parser@8.58.1(eslint@9.39.4)(typescript@5.9.3))(eslint@9.39.4)(typescript@5.9.3)
       '@typescript-eslint/parser':
-        specifier: ^8.58.1
+        specifier: 8.58.1
         version: 8.58.1(eslint@9.39.4)(typescript@5.9.3)
       c8:
-        specifier: ^11.0.0
+        specifier: 11.0.0
         version: 11.0.0
       eslint:
-        specifier: ^9.0.0
+        specifier: 9.39.4
         version: 9.39.4
       markdownlint-cli:
-        specifier: ^0.48.0
+        specifier: 0.48.0
         version: 0.48.0
       prettier:
-        specifier: ^3.8.2
+        specifier: 3.8.2
         version: 3.8.2
       tsx:
-        specifier: ^4.21.0
+        specifier: 4.21.0
         version: 4.21.0
       typescript:
-        specifier: ^5.6.3
+        specifier: 5.9.3
         version: 5.9.3
       vitepress:
-        specifier: ^1.6.4
+        specifier: 1.6.4
         version: 1.6.4(@algolia/client-search@5.50.1)(@types/node@22.19.17)(postcss@8.5.9)(search-insights@2.17.3)(typescript@5.9.3)
 
 packages:
@@ -2898,7 +2898,7 @@ snapshots:
 
   '@types/hast@3.0.4':
     dependencies:
-      '@types/unist': 2.0.11
+      '@types/unist': 3.0.3
 
   '@types/istanbul-lib-coverage@2.0.6': {}
 
