@@ -10,10 +10,7 @@ import assert from 'node:assert/strict';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { rm } from 'node:fs/promises';
-import {
-  UnixSocketTransport,
-  UnixSocketClient,
-} from '../src/transport/unix-socket.js';
+import { UnixSocketTransport, UnixSocketClient } from '../src/transport/unix-socket.js';
 import { HttpTransport, HttpClient } from '../src/transport/http.js';
 import type { KWPFrame } from '../src/types.js';
 
@@ -22,7 +19,10 @@ import type { KWPFrame } from '../src/types.js';
 // ---------------------------------------------------------------------------
 
 function makeSocketPath(): string {
-  return join(tmpdir(), `dsr-test-${Date.now().toString()}-${Math.random().toString(36).slice(2)}.sock`);
+  return join(
+    tmpdir(),
+    `dsr-test-${Date.now().toString()}-${Math.random().toString(36).slice(2)}.sock`,
+  );
 }
 
 /** Pick an ephemeral port in the 40000–49999 range. */
@@ -30,10 +30,7 @@ function makePort(): number {
   return 40000 + Math.floor(Math.random() * 9999);
 }
 
-function echoHandler(
-  frame: KWPFrame,
-  reply: (f: KWPFrame) => void,
-): Promise<void> {
+function echoHandler(frame: KWPFrame, reply: (f: KWPFrame) => void): Promise<void> {
   reply({ type: 'response', id: frame.id, payload: frame.payload });
   return Promise.resolve();
 }
@@ -96,8 +93,12 @@ describe('UnixSocketTransport', () => {
       await clientA.connect();
       await clientB.connect();
 
-      clientA.on('event', (frame) => { receivedA.push(frame); });
-      clientB.on('event', (frame) => { receivedB.push(frame); });
+      clientA.on('event', (frame) => {
+        receivedA.push(frame);
+      });
+      clientB.on('event', (frame) => {
+        receivedB.push(frame);
+      });
 
       const event: KWPFrame = {
         type: 'event',
@@ -107,7 +108,9 @@ describe('UnixSocketTransport', () => {
       transport.broadcast(event);
 
       // Give the event loop a tick to deliver the buffers
-      await new Promise<void>((resolve) => { setImmediate(resolve); });
+      await new Promise<void>((resolve) => {
+        setImmediate(resolve);
+      });
 
       assert.equal(receivedA.length, 1);
       assert.equal(receivedA[0]?.id, 'evt-001');
@@ -123,8 +126,7 @@ describe('UnixSocketTransport', () => {
 
   it('returns an error frame when the handler rejects', async () => {
     const socketPath = makeSocketPath();
-    const failingHandler = (_frame: KWPFrame, _reply: (f: KWPFrame) => void): Promise<void> =>
-      Promise.reject(new Error('handler exploded'));
+    const failingHandler = (): Promise<void> => Promise.reject(new Error('handler exploded'));
 
     const transport = new UnixSocketTransport(socketPath);
     const client = new UnixSocketClient(socketPath);
@@ -154,12 +156,16 @@ describe('UnixSocketTransport', () => {
       await transport.start(echoHandler);
       await client.connect();
 
-      const handler = (frame: KWPFrame) => { received.push(frame); };
+      const handler = (frame: KWPFrame) => {
+        received.push(frame);
+      };
       client.on('event', handler);
       client.off('event', handler);
 
       transport.broadcast({ type: 'event', id: 'evt-002' });
-      await new Promise<void>((resolve) => { setImmediate(resolve); });
+      await new Promise<void>((resolve) => {
+        setImmediate(resolve);
+      });
 
       assert.equal(received.length, 0);
     } finally {
@@ -226,7 +232,7 @@ describe('HttpTransport', () => {
       await transport.start(echoHandler);
       const res = await fetch(`http://127.0.0.1:${port.toString()}/kwp/status`);
       assert.equal(res.status, 200);
-      const body = await res.json() as { status: string };
+      const body = (await res.json()) as { status: string };
       assert.equal(body.status, 'running');
     } finally {
       await transport.stop();
@@ -277,8 +283,7 @@ describe('HttpTransport', () => {
 
   it('returns 500 when handler rejects', async () => {
     const port = makePort();
-    const failHandler = (): Promise<void> =>
-      Promise.reject(new Error('http handler exploded'));
+    const failHandler = (): Promise<void> => Promise.reject(new Error('http handler exploded'));
     const transport = new HttpTransport(port);
     try {
       await transport.start(failHandler);
@@ -295,8 +300,7 @@ describe('HttpTransport', () => {
 
   it('client throws on request when server returns error frame', async () => {
     const port = makePort();
-    const failHandler = (): Promise<void> =>
-      Promise.reject(new Error('http handler exploded'));
+    const failHandler = (): Promise<void> => Promise.reject(new Error('http handler exploded'));
     const transport = new HttpTransport(port);
     const client = new HttpClient(port);
     try {

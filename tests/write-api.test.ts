@@ -33,8 +33,12 @@ function makeTransport(responsePayload: unknown = null): StubbedTransport {
     responsePayload,
     connect: () => Promise.resolve(),
     disconnect: () => Promise.resolve(),
-    on: () => { /* no-op */ },
-    off: () => { /* no-op */ },
+    on: () => {
+      /* no-op */
+    },
+    off: () => {
+      /* no-op */
+    },
     request(frame: KWPFrame): Promise<KWPFrame> {
       stub.lastFrame = frame;
       return Promise.resolve({
@@ -218,10 +222,7 @@ describe('KernelWriteAPI', () => {
   it('exportSnapshot throws when response payload is not a string', async () => {
     const transport = makeTransport(42);
     const api = new KernelWriteAPI(transport);
-    await assert.rejects(
-      api.exportSnapshot('/tmp/snapshot.bin'),
-      /Unexpected payload/,
-    );
+    await assert.rejects(api.exportSnapshot('/tmp/snapshot.bin'), /Unexpected payload/);
   });
 
   it('each request uses a unique id', async () => {

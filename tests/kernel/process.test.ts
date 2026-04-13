@@ -413,13 +413,15 @@ describe('KernelProcess event emission', () => {
       await client.connect();
       client.on('event', (frame) => {
         const payload = frame.payload as KernelEvent;
-        if (payload && typeof payload === 'object' && 'type' in payload) {
+        if (typeof payload === 'object' && 'type' in payload) {
           events.push(payload);
         }
       });
 
       kernel.addToken('#/color/brand', makeToken('#/color/brand'));
-      await new Promise<void>((resolve) => { setImmediate(resolve); });
+      await new Promise<void>((resolve) => {
+        setImmediate(resolve);
+      });
 
       const added = events.find((e) => e.type === 'token.added');
       assert.ok(added !== undefined);

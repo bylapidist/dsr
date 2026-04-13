@@ -12,15 +12,8 @@ import { rm } from 'node:fs/promises';
 import { EdgeEnvironment } from '../src/environments/edge.js';
 import { NodeEnvironment } from '../src/environments/node.js';
 import { writeSnapshot } from '../src/kernel/snapshot.js';
-import {
-  createInitialState,
-  withTokenGraph,
-  withSnapshotHash,
-} from '../src/kernel/state.js';
-import {
-  UnixSocketTransport,
-  DEFAULT_SOCKET_PATH,
-} from '../src/transport/unix-socket.js';
+import { createInitialState, withTokenGraph, withSnapshotHash } from '../src/kernel/state.js';
+import { UnixSocketTransport, DEFAULT_SOCKET_PATH } from '../src/transport/unix-socket.js';
 import { HttpTransport } from '../src/transport/http.js';
 import type { KWPFrame, DtifFlattenedToken } from '../src/types.js';
 
@@ -57,10 +50,7 @@ function makeToken(pointer: string, type: string, value: unknown): DtifFlattened
   };
 }
 
-function pongHandler(
-  frame: KWPFrame,
-  reply: (f: KWPFrame) => void,
-): Promise<void> {
+function pongHandler(frame: KWPFrame, reply: (f: KWPFrame) => void): Promise<void> {
   reply({ type: 'response', id: frame.id, payload: { pong: true } });
   return Promise.resolve();
 }
@@ -184,7 +174,13 @@ describe('NodeEnvironment', () => {
       socketPath: DEFAULT_SOCKET_PATH,
       connectTimeoutMs: 10,
     });
-    assert.throws(() => env.onEvent(() => { /* handler */ }), /connect\(\)/);
+    assert.throws(
+      () =>
+        env.onEvent(() => {
+          /* handler */
+        }),
+      /connect\(\)/,
+    );
   });
 
   it('connects to a Unix socket transport and provides dsql', async () => {
@@ -249,7 +245,9 @@ describe('NodeEnvironment', () => {
       await env.connect();
 
       const events: unknown[] = [];
-      const off = env.onEvent((event) => { events.push(event); });
+      const off = env.onEvent((event) => {
+        events.push(event);
+      });
       assert.equal(typeof off, 'function');
       off(); // unsubscribe without error
     } finally {
