@@ -93,11 +93,23 @@ describe('UnixSocketTransport', () => {
       await clientA.connect();
       await clientB.connect();
 
-      clientA.on('event', (frame) => {
-        receivedA.push(frame);
+      // Register promise-based listeners before broadcasting so we
+      // deterministically await the arrival of each event frame.
+      const waitA = new Promise<KWPFrame>((resolve) => {
+        const handler = (frame: KWPFrame): void => {
+          receivedA.push(frame);
+          clientA.off('event', handler);
+          resolve(frame);
+        };
+        clientA.on('event', handler);
       });
-      clientB.on('event', (frame) => {
-        receivedB.push(frame);
+      const waitB = new Promise<KWPFrame>((resolve) => {
+        const handler = (frame: KWPFrame): void => {
+          receivedB.push(frame);
+          clientB.off('event', handler);
+          resolve(frame);
+        };
+        clientB.on('event', handler);
       });
 
       const event: KWPFrame = {
@@ -107,10 +119,7 @@ describe('UnixSocketTransport', () => {
       };
       transport.broadcast(event);
 
-      // Give the event loop a tick to deliver the buffers
-      await new Promise<void>((resolve) => {
-        setImmediate(resolve);
-      });
+      await Promise.all([waitA, waitB]);
 
       assert.equal(receivedA.length, 1);
       assert.equal(receivedA[0]?.id, 'evt-001');

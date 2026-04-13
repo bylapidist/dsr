@@ -18,6 +18,7 @@ import type {
   PluginManifest,
   EntropyScore,
   KernelEvent,
+  KWPFrame,
 } from '../../src/types.js';
 
 // ---------------------------------------------------------------------------
@@ -411,22 +412,23 @@ describe('KernelProcess event emission', () => {
     try {
       await kernel.start();
       await client.connect();
-      client.on('event', (frame) => {
-        const payload = frame.payload as KernelEvent;
-        if (typeof payload === 'object' && 'type' in payload) {
-          events.push(payload);
-        }
+
+      // Register the promise-based listener before mutating state so we
+      // deterministically await the event frame rather than polling.
+      const waitForAdded = new Promise<KernelEvent>((resolve) => {
+        const handler = (frame: KWPFrame): void => {
+          const payload = frame.payload as KernelEvent;
+          if (typeof payload === 'object' && 'type' in payload) {
+            events.push(payload);
+            client.off('event', handler);
+            resolve(payload);
+          }
+        };
+        client.on('event', handler);
       });
 
       kernel.addToken('#/color/brand', makeToken('#/color/brand'));
-
-      // Poll until the event arrives (up to 500 ms) to avoid CI flakiness.
-      const deadline = Date.now() + 500;
-      while (events.length === 0 && Date.now() < deadline) {
-        await new Promise<void>((resolve) => {
-          setImmediate(resolve);
-        });
-      }
+      await waitForAdded;
 
       const added = events.find((e) => e.type === 'token.added');
       assert.ok(added !== undefined);
