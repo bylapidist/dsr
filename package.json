@@ -1,6 +1,6 @@
 {
   "name": "@lapidist/dsr",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Design System Runtime — long-lived kernel process holding the complete design system graph in memory",
   "type": "module",
   "main": "dist/index.js",
