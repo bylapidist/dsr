@@ -9,7 +9,7 @@ importers:
   .:
     dependencies:
       '@lapidist/dtif-parser':
-        specifier: ^2.0.0
+        specifier: 2.0.0
         version: 2.0.0
       msgpackr:
         specifier: ^1.11.2

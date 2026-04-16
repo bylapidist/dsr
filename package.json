@@ -64,7 +64,7 @@
   "homepage": "https://dsr.lapidist.net",
   "license": "MIT",
   "dependencies": {
-    "@lapidist/dtif-parser": "^2.0.0",
+    "@lapidist/dtif-parser": "2.0.0",
     "msgpackr": "^1.11.2"
   },
   "devDependencies": {
