@@ -11,12 +11,8 @@
 pnpm add @lapidist/dsr
 ```
 
-DSR requires `@lapidist/dtif-parser` as a peer dependency. If your project doesn't
-already have it, install it alongside DSR:
-
-```bash
-pnpm add @lapidist/dsr @lapidist/dtif-parser
-```
+`@lapidist/dtif-parser` is a direct dependency of DSR and is installed automatically
+when you add `@lapidist/dsr`.
 
 ## TypeScript
 
