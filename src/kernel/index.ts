@@ -12,7 +12,15 @@ import type {
   ComponentDefinition,
   DeprecationEntry,
 } from '../types.js';
-import { isRecord } from '../guards.js';
+import {
+  isRecord,
+  isDtifFlattenedToken,
+  isPartialRuleDefinition,
+  isComponentDefinition,
+  isDeprecationEntry,
+  isPluginManifest,
+  isEntropyScore,
+} from '../guards.js';
 import { createInitialState, withSnapshotHash, withEntropyState } from './state.js';
 import { KernelEventBus } from './event-bus.js';
 import { writeSnapshot } from './snapshot.js';
@@ -328,6 +336,200 @@ export class KernelProcess {
       case 'dsql.entropy':
         respond(executor.entropy());
         break;
+
+      case 'write.addToken': {
+        const token = params.token;
+        if (!isDtifFlattenedToken(token)) {
+          reply({
+            type: 'error',
+            id: frame.id,
+            error: { code: 'INVALID_PARAMS', message: 'token must be a valid DtifFlattenedToken' },
+          });
+          break;
+        }
+        try {
+          this.addToken(str('pointer'), token);
+          respond(null);
+        } catch (err) {
+          reply({
+            type: 'error',
+            id: frame.id,
+            error: {
+              code: 'WRITE_ERROR',
+              message: err instanceof Error ? err.message : String(err),
+            },
+          });
+        }
+        break;
+      }
+
+      case 'write.deprecateToken':
+        try {
+          this.deprecateToken(str('pointer'), optStr('replacement'));
+          respond(null);
+        } catch (err) {
+          reply({
+            type: 'error',
+            id: frame.id,
+            error: {
+              code: 'WRITE_ERROR',
+              message: err instanceof Error ? err.message : String(err),
+            },
+          });
+        }
+        break;
+
+      case 'write.removeToken':
+        try {
+          this.removeToken(str('pointer'));
+          respond(null);
+        } catch (err) {
+          reply({
+            type: 'error',
+            id: frame.id,
+            error: {
+              code: 'WRITE_ERROR',
+              message: err instanceof Error ? err.message : String(err),
+            },
+          });
+        }
+        break;
+
+      case 'write.configureRule': {
+        const partial = params.partial;
+        if (!isPartialRuleDefinition(partial)) {
+          reply({
+            type: 'error',
+            id: frame.id,
+            error: {
+              code: 'INVALID_PARAMS',
+              message: 'partial must be a valid partial RuleDefinition',
+            },
+          });
+          break;
+        }
+        try {
+          this.configureRule(str('ruleId'), partial);
+          respond(null);
+        } catch (err) {
+          reply({
+            type: 'error',
+            id: frame.id,
+            error: {
+              code: 'WRITE_ERROR',
+              message: err instanceof Error ? err.message : String(err),
+            },
+          });
+        }
+        break;
+      }
+
+      case 'write.registerComponent': {
+        const definition = params.definition;
+        if (!isComponentDefinition(definition)) {
+          reply({
+            type: 'error',
+            id: frame.id,
+            error: {
+              code: 'INVALID_PARAMS',
+              message: 'definition must be a valid ComponentDefinition',
+            },
+          });
+          break;
+        }
+        try {
+          this.registerComponent(str('name'), definition);
+          respond(null);
+        } catch (err) {
+          reply({
+            type: 'error',
+            id: frame.id,
+            error: {
+              code: 'WRITE_ERROR',
+              message: err instanceof Error ? err.message : String(err),
+            },
+          });
+        }
+        break;
+      }
+
+      case 'write.loadPlugin': {
+        const manifest = params.manifest;
+        if (!isPluginManifest(manifest)) {
+          reply({
+            type: 'error',
+            id: frame.id,
+            error: { code: 'INVALID_PARAMS', message: 'manifest must be a valid PluginManifest' },
+          });
+          break;
+        }
+        try {
+          this.loadPlugin(manifest);
+          respond(null);
+        } catch (err) {
+          reply({
+            type: 'error',
+            id: frame.id,
+            error: {
+              code: 'WRITE_ERROR',
+              message: err instanceof Error ? err.message : String(err),
+            },
+          });
+        }
+        break;
+      }
+
+      case 'write.recordDeprecationEntry': {
+        const entry = params.entry;
+        if (!isDeprecationEntry(entry)) {
+          reply({
+            type: 'error',
+            id: frame.id,
+            error: { code: 'INVALID_PARAMS', message: 'entry must be a valid DeprecationEntry' },
+          });
+          break;
+        }
+        try {
+          this.recordDeprecationEntry(entry);
+          respond(null);
+        } catch (err) {
+          reply({
+            type: 'error',
+            id: frame.id,
+            error: {
+              code: 'WRITE_ERROR',
+              message: err instanceof Error ? err.message : String(err),
+            },
+          });
+        }
+        break;
+      }
+
+      case 'write.updateEntropy': {
+        const score = params.score;
+        if (!isEntropyScore(score)) {
+          reply({
+            type: 'error',
+            id: frame.id,
+            error: { code: 'INVALID_PARAMS', message: 'score must be a valid EntropyScore' },
+          });
+          break;
+        }
+        try {
+          this.updateEntropy(score);
+          respond(null);
+        } catch (err) {
+          reply({
+            type: 'error',
+            id: frame.id,
+            error: {
+              code: 'WRITE_ERROR',
+              message: err instanceof Error ? err.message : String(err),
+            },
+          });
+        }
+        break;
+      }
 
       default:
         reply({

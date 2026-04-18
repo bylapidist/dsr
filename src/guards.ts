@@ -86,6 +86,13 @@ function isRuleSeverity(v: unknown): v is RuleSeverity {
   return typeof v === 'string' && VALID_SEVERITIES.has(v);
 }
 
+export function isPartialRuleDefinition(v: unknown): v is Partial<RuleDefinition> {
+  if (!isRecord(v)) return false;
+  if ('severity' in v && !isRuleSeverity(v.severity)) return false;
+  if ('enabled' in v && typeof v.enabled !== 'boolean') return false;
+  return true;
+}
+
 export function isRuleDefinition(v: unknown): v is RuleDefinition {
   if (!isRecord(v)) return false;
   return (
