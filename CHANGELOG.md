@@ -1,5 +1,15 @@
 # @lapidist/dsr
 
+## 0.2.0
+
+### Minor Changes
+
+- 64c3887: feat(kernel): add write.\* dispatch cases to KernelProcess#dispatch — all eight write-API methods (addToken, deprecateToken, removeToken, configureRule, registerComponent, loadPlugin, recordDeprecationEntry, updateEntropy) are now reachable over KWP; previously they fell through to UNKNOWN_METHOD
+
+### Patch Changes
+
+- 64c3887: docs(installation): correct dtif-parser dependency description — it is a direct dependency installed automatically, not a peer dependency
+
 ## 0.1.1
 
 ### Patch Changes
