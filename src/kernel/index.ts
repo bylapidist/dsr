@@ -22,6 +22,7 @@ import {
   isEntropyScore,
 } from '../guards.js';
 import { createInitialState, withSnapshotHash, withEntropyState } from './state.js';
+import { computeEntropyScore } from './entropy.js';
 import { KernelEventBus } from './event-bus.js';
 import { writeSnapshot } from './snapshot.js';
 import { DSQLExecutor } from '../dsql/executor.js';
@@ -166,6 +167,7 @@ export class KernelProcess {
     };
 
     this.#emitEvent({ type: 'token.added', pointer, token });
+    this.#recomputeEntropy();
   }
 
   deprecateToken(pointer: string, replacement?: string): void {
@@ -173,6 +175,7 @@ export class KernelProcess {
     entries.set(pointer, { pointer, replacement });
     this.#state = { ...this.#state, deprecationLedger: { entries } };
     this.#emitEvent({ type: 'token.deprecated', pointer, replacement });
+    this.#recomputeEntropy();
   }
 
   removeToken(pointer: string): void {
@@ -189,6 +192,7 @@ export class KernelProcess {
 
     this.#state = { ...this.#state, tokenGraph: { ...current, tokens, byType } };
     this.#emitEvent({ type: 'token.removed', pointer });
+    this.#recomputeEntropy();
   }
 
   configureRule(ruleId: string, partial: Partial<RuleDefinition>): void {
@@ -216,6 +220,7 @@ export class KernelProcess {
     const entries = new Map(this.#state.deprecationLedger.entries);
     entries.set(entry.pointer, entry);
     this.#state = { ...this.#state, deprecationLedger: { entries } };
+    this.#recomputeEntropy();
   }
 
   updateEntropy(score: EntropyScore): void {
@@ -233,6 +238,24 @@ export class KernelProcess {
   // ---------------------------------------------------------------------------
   // Internal
   // ---------------------------------------------------------------------------
+
+  /**
+   * Recompute the entropy score from current state and emit an `entropy.updated`
+   * event. Called automatically after every write mutation so the kernel is the
+   * authoritative entropy source rather than relying on external callers.
+   */
+  #recomputeEntropy(): void {
+    const score = computeEntropyScore(this.#state);
+    const history = [...this.#state.entropyState.history, this.#state.entropyState.current].slice(
+      -100,
+    );
+    this.#state = withEntropyState(this.#state, {
+      current: score,
+      baseline: this.#state.entropyState.baseline,
+      history,
+    });
+    this.#emitEvent({ type: 'entropy.updated', score });
+  }
 
   #emitEvent(event: KernelEvent): void {
     this.#eventBus.emit(event);
@@ -275,6 +298,10 @@ export class KernelProcess {
 
       case 'kernel.snapshot':
         respond(await this.exportSnapshot(str('path') || 'snapshot.bin'));
+        break;
+
+      case 'dsql.tokens.all':
+        respond(await executor.tokens(optStr('type')).all());
         break;
 
       case 'dsql.tokens.closest':
