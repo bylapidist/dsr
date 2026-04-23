@@ -30,7 +30,7 @@
   "engines": {
     "node": ">=22"
   },
-  "packageManager": "pnpm@10.33.1",
+  "packageManager": "pnpm@10.33.2",
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "test": "tsx --test 'tests/**/*.test.ts'",
