@@ -65,7 +65,7 @@
   "license": "MIT",
   "dependencies": {
     "@lapidist/dtif-parser": "2.0.0",
-    "msgpackr": "2.0.2"
+    "msgpackr": "2.0.3"
   },
   "devDependencies": {
     "@changesets/cli": "2.31.0",
