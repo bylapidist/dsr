@@ -12,8 +12,8 @@ importers:
         specifier: 2.0.0
         version: 2.0.0
       msgpackr:
-        specifier: 2.0.2
-        version: 2.0.2
+        specifier: 2.0.3
+        version: 2.0.3
     devDependencies:
       '@changesets/cli':
         specifier: 2.31.0
@@ -1701,8 +1701,8 @@ packages:
     resolution: {integrity: sha512-4kmO/MdyUIkLIvTPr8VHLil4AtoKIoniWPIEk5+CDy0xnWC84azhSFmuJ7PxZdsYtiP5kEeQsORAVIeMgxT+Hw==}
     hasBin: true
 
-  msgpackr@2.0.2:
-    resolution: {integrity: sha512-c5hYOXFbP79Slh6Dzd2wzk+jnV7mX1UxfMYtilnY1NmalXPqG8DGb5cYCMBrW4AsH3zekBBZd4QrKz9NhtvYLQ==}
+  msgpackr@2.0.3:
+    resolution: {integrity: sha512-vFKpMYFTEQujRQxvdS/u6zlfesws0J40K74w6E1fVsYnIa9WKJKB5xIVVON8L7S39hCNrCVGXcPjrYmCb9lT+w==}
 
   nanoid@3.3.11:
     resolution: {integrity: sha512-N8SpfPUnUp1bK+PMYW8qSWdl9U+wwNWI4QKxOYDy9JAro3WMX7p2OeVRF9v+347pnakNevPmiHhNmZ2HbFA76w==}
@@ -3876,7 +3876,7 @@ snapshots:
       '@msgpackr-extract/msgpackr-extract-win32-x64': 3.0.4
     optional: true
 
-  msgpackr@2.0.2:
+  msgpackr@2.0.3:
     optionalDependencies:
       msgpackr-extract: 3.0.4
 
