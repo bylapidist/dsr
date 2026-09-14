@@ -68,7 +68,7 @@
     "msgpackr": "2.1.0"
   },
   "devDependencies": {
-    "@changesets/cli": "3.0.2",
+    "@changesets/cli": "3.0.3",
     "@lapidist/eslint-config": "1.0.0",
     "@types/node": "24.13.4",
     "@typescript-eslint/eslint-plugin": "8.70.0",
